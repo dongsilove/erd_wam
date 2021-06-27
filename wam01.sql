@@ -1,0 +1,263 @@
+/* Drop Tables */
+
+DROP TABLE IF EXISTS T_AU_DEPT;
+
+/* Create Tables */
+
+-- 부서
+CREATE TABLE T_AU_DEPT
+(
+	-- 부서 코드
+	DEPT_CD varchar(20) NOT NULL,
+	-- 부서 명
+	DEPT_NM varchar(200) NOT NULL,
+	-- 부서 설명
+	DEPT_DC VARCHAR(2000),
+	-- 사용 여부
+	USE_YN CHAR(1),
+	-- 등록 아이디
+	REGIST_ID varchar(50),
+	-- 등록 일시
+	REGIST_DT timestamp,
+	-- 수정 아이디
+	MODIFY_ID varchar(50),
+	-- 수정 일시
+	MODIFY_DT timestamp,
+	CONSTRAINT PK_T_AU_DEPT PRIMARY KEY (DEPT_CD)
+) WITHOUT OIDS;
+
+COMMENT ON TABLE T_AU_DEPT IS '부서';
+COMMENT ON COLUMN T_AU_DEPT.DEPT_CD IS '부서코드';
+COMMENT ON COLUMN T_AU_DEPT.DEPT_DC IS '부서설명';
+COMMENT ON COLUMN T_AU_DEPT.USE_YN IS '사용여부';
+COMMENT ON COLUMN T_AU_DEPT.REGIST_ID IS '등록아이디';
+COMMENT ON COLUMN T_AU_DEPT.REGIST_DT IS '등록일시';
+COMMENT ON COLUMN T_AU_DEPT.MODIFY_ID IS '수정아이디';
+COMMENT ON COLUMN T_AU_DEPT.MODIFY_DT IS '수정일시';
+
+DROP TABLE IF EXISTS T_CM_CD_GRP;
+-- 공통코드그룹
+CREATE TABLE T_CM_CD_GRP
+(
+	-- 그룹 코드
+	GRP_CD varchar(20) NOT NULL,
+	-- 그릅 코드 명
+	GRP_CD_NM varchar(200) NOT NULL,
+	-- 테이블 명
+	TABLE_NM varchar(200),
+	-- 컬럼 명
+	COLUMN_NM varchar(200),
+	CONSTRAINT PK_T_CM_CD_GRP PRIMARY KEY (GRP_CD)
+) WITHOUT OIDS;
+
+-- 공통코드
+CREATE TABLE T_CM_CD
+	-- 그룹 코드
+	GRP_CD varchar(20) NOT NULL,
+	-- 코드
+	CD varchar(20) NOT NULL,
+	-- 코드 명
+	CD_NM varchar(200) NOT NULL,
+	-- 부서 설명
+	CD_DC VARCHAR(2000),
+	-- 정렬순서
+	SORT_ORDR numeric,
+	-- 코드속성1
+	CD_ATRB1 VARCHAR(100),
+	-- 코드속성2
+	CD_ATRB2 VARCHAR(100),
+	-- 코드속성3
+	CD_ATRB3 VARCHAR(100),
+	
+	CONSTRAINT PK_T_CM_CD PRIMARY KEY (GRP_CD, CD)
+) WITHOUT OIDS;
+
+-- 사용자
+CREATE TABLE T_CM_USER
+(
+	-- 사용자 아이디
+	USER_ID varchar(50) NOT NULL,
+	-- 사용자 명
+	USER_NM varchar(200) NOT NULL,
+	-- 부서 코드
+	DEPT_CD varchar(20) NOT NULL,
+	-- 비밀번호
+	PWD varchar(100),
+	-- 비밀번호 SALT
+	PWD_SALT varchar(20),
+	-- 권한 그룹 코드
+	AUTHOR_GRP_CD varchar(20) NOT NULL,
+	--전화번호
+	TELNO VARCHAR(11),
+	-- 최초 로그인 일시
+	FRST_LOGIN_DT  timestamp,
+	-- 최종 로그인 일시
+	LAST_LOGIN_DT timestamp,
+	CONSTRAINT PK_T_CM_USER PRIMARY KEY (USER_ID)
+) WITHOUT OIDS;
+
+
+-- 권한그룹
+CREATE TABLE T_CM_AUTHOR_GRP
+(
+	-- 권한 그룹 코드
+	AUTHOR_GRP_CD varchar(20) NOT NULL,
+	-- 권한 그릅 명
+	AUTHOR_GRP_NM varchar(200) NOT NULL,
+	-- 권한 내용
+	AUTHOR_CN VARCHAR(1000),
+	
+	CONSTRAINT PK_T_CM_GRP PRIMARY KEY (AUTHOR_GRP_CD)
+) WITHOUT OIDS;
+
+
+-- 메뉴
+CREATE TABLE T_CM_MENU
+(
+	-- 메뉴아이디
+	MENU_ID varchar(50) NOT NULL,			-- 메뉴아이디
+	-- 메뉴명
+	MENU_NM varchar(200) NOT NULL,			-- 메뉴명
+	-- 상위메뉴아이디
+	UPPER_MENU_ID VARCHAR(50),
+	-- 시스템구분
+	SYS_SE VARCHAR(5),
+	-- 메뉴URL
+	MENU_URL VARCHAR(200),
+	
+	CONSTRAINT PK_T_CM_MENU PRIMARY KEY (MENU_ID)
+) WITHOUT OIDS;
+
+-- 부서권한
+CREATE TABLE T_CM_DEPT_AUTHOR
+(
+	MENU_ID varchar(50) NOT NULL,			-- 메뉴아이디
+	AUTHOR_GRP_CD varchar(20) NOT NULL,		-- 권한그룹코드
+	
+	CONSTRAINT PK_T_CM_DEPT_AUTHOR PRIMARY KEY (MENU_ID,AUTHOR_GRP_CD)
+) WITHOUT OIDS;
+
+-- 공통파일
+CREATE TABLE T_CM_FILE
+(
+	FILE_SN serial NOT NULL,				-- 파일일련번호
+	TABLE_NM varchar(200) NOT NULL,			-- 테이블명
+	TABLE_SN numeric,						-- 테이블일련번호
+	ORGN_FILE_NM VARCHAR(200),				-- 원본파일명
+	SAVE_FILE_NM VARCHAR(200),				-- 저장파일명
+	FILE_PATH  VARCHAR(400),				-- 파일경로
+	FILE_SIZE numeric,						-- 파일크기
+	
+	CONSTRAINT PK_T_CM_FILE PRIMARY KEY (FILE_SN)
+) WITHOUT OIDS;
+
+-- 접속로그
+CREATE TABLE T_CM_LOG_ACC
+(
+	LOG_SN serial NOT NULL,					-- 로그일련번호
+	CONECT_IP VARCHAR(100)  NOT NULL,		-- 접속IP	 	
+	CONECT_DT timestamp,					-- 접속일시
+	CONSTRAINT PK_T_CM_LOG_ACC PRIMARY KEY (LOG_SN)
+) WITHOUT OIDS;
+
+-- 출력로그
+CREATE TABLE T_CM_LOG_OUT
+(
+	LOG_SN serial NOT NULL,					-- 로그일련번호
+	URL VARCHAR(200)  NOT NULL,	 			-- URL
+	FILE_NM VARCHAR(200),					-- 파일명
+	CONSTRAINT PK_T_CM_LOG_OUT PRIMARY KEY (LOG_SN)
+) WITHOUT OIDS;
+
+-- 에러로그
+CREATE TABLE T_CM_LOG_ERR
+(
+	LOG_SN serial NOT NULL,					-- 로그일련번호
+	ERR_CN VARCHAR(1000)  NOT NULL,	 		-- 오류내용
+	CONSTRAINT PK_T_CM_LOG_OUT PRIMARY KEY (LOG_SN)
+) WITHOUT OIDS;
+
+-- 자산
+CREATE TABLE T_AM_ASST
+(
+	ASST_SN serial NOT NULL,				-- 자산일련번호
+	ASST_NM VARCHAR(200)  NOT NULL,	 		-- 자산명
+	INSTALL_YMD CHAR(8)  NOT NULL,	 		-- 설치일	
+	GEOM geometry,							-- GIS정보
+	
+	CONSTRAINT PK_T_AM_ASST PRIMARY KEY (ASST_SN)
+) WITHOUT OIDS;
+
+-- 자산분류
+CREATE TABLE T_AM_ASST_CL
+(
+	ASST_CL_SN serial NOT NULL,				-- 자산분류일련번호	
+	UPPER_ASST_CL_SN numeric,				-- 상위자산분류일련번호
+	ASST_CL_NM VARCHAR(200)  NOT NULL,	 	-- 자산분류명
+	SORT_ORDR numeric,	 					-- 정렬순서	
+	ASST_CL_DC VARCHAR(2000),				-- 자산분류설명
+	
+	CONSTRAINT PK_T_AM_ASST PRIMARY KEY (ASST_CL_SN)
+) WITHOUT OIDS;
+
+-- 자산분류내역
+CREATE TABLE T_AM_ASST_CL_LIST
+(
+	ASST_SN serial NOT NULL,				-- 자산일련번호
+	ASST_CL_SN serial NOT NULL,				-- 자산분류일련번호
+	
+	CONSTRAINT PK_T_AM_ASST PRIMARY KEY (ASST_SN, ASST_CL_SN)
+) WITHOUT OIDS;
+
+-- 자산속성
+CREATE TABLE T_AM_ASST_ATRB
+(
+	ASST_ATRB_SN serial NOT NULL,			-- 자산속성일련번호
+	ASST_ATRB_NM VARCHAR(200)  NOT NULL,	-- 자산속성명 
+	ASST_ATRB_SE VARCHAR(50),	 			-- 자산속성구분
+	ASST_ATRB_DC VARCHAR(2000),				-- 자산속성설명
+	SORT_ORDR numeric,	 					-- 정렬순서
+	
+	CONSTRAINT PK_T_AM_ASST_ATRB PRIMARY KEY (ASST_ATRB_SN)
+) WITHOUT OIDS;
+
+-- 자산속성내역
+CREATE TABLE T_AM_ASST_ATRB_LIST
+(
+	ASST_SN numeric NOT NULL,				-- 자산일련번호
+	ASST_ATRB_SN numeric NOT NULL,			-- 자산분류일련번호
+	
+	CONSTRAINT PK_T_AM_ASST PRIMARY KEY (ASST_SN,ASST_ATRB_SN )
+) WITHOUT OIDS;
+
+-- 업체
+CREATE TABLE T_OP_CRPR
+(
+	CRPR_SN serial NOT NULL,				-- 업체일련번호
+	CRPR_NM VARCHAR(200)  NOT NULL,			-- 업체명
+	CRPR_SE VARCHAR(5)  NOT NULL,			-- 업체구분
+	CRPR_DC VARCHAR(2000),					-- 업체설명
+	CHARGER_NM  VARCHAR(200),				-- 담당자명
+	TELNO  VARCHAR(11),						-- 전화번호
+	CONSTRAINT PK_T_OP_CRPR PRIMARY KEY (CRPR_SN)
+) WITHOUT OIDS;
+
+-- 공사
+CREATE TABLE T_OP_CSTRN
+(
+	CSTRN_SN serial NOT NULL,				-- 공사일련번호
+	CSTRN_NM VARCHAR(200)  NOT NULL,		-- 공사명
+	CSTRN_CT numeric,						-- 공사비용
+	CSTRN_DC VARCHAR(2000),					-- 공사설명
+	BEGIN_YMD  CHAR(8),						-- 시작일
+	END_YMD  CHAR(8),						-- 종료일
+	CONSTRAINT PK_T_OP_CRPR PRIMARY KEY (CSTRN_SN)
+) WITHOUT OIDS;
+
+
+
+
+
+
+
+
