@@ -998,7 +998,7 @@ COMMENT ON COLUMN T_EV_P_SCOR_WGHT.MODIFY_DT IS '수정일시';
 CREATE TABLE T_EV_P_LYNG_COEF
 (
 	LYNG_COEF_SN serial NOT NULL,				-- 매설계수일련번호
-	REVISN_COEF  VARCHAR(20) NOT NULL,			-- 보정계수
+	REVISN_COEF  numeric NOT NULL,				-- 보정계수
 	BEGIN_VAL 	 numeric,							-- 시작값
 	END_VAL 	 numeric,							-- 종료값
 	USE_YN CHAR(1),								-- 사용여부
