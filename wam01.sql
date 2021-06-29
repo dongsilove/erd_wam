@@ -20,6 +20,7 @@ CREATE TABLE T_CM_DEPT
 
 COMMENT ON TABLE T_CM_DEPT IS '부서';
 COMMENT ON COLUMN T_CM_DEPT.DEPT_CD IS '부서코드';
+COMMENT ON COLUMN T_CM_DEPT.DEPT_NM IS '부서명';
 COMMENT ON COLUMN T_CM_DEPT.DEPT_DC IS '부서설명';
 COMMENT ON COLUMN T_CM_DEPT.USE_YN IS '사용여부';
 COMMENT ON COLUMN T_CM_DEPT.REGIST_ID IS '등록아이디';
@@ -183,7 +184,7 @@ COMMENT ON COLUMN T_CM_MENU.MODIFY_DT IS '수정일시';
 -- 부서권한
 CREATE TABLE T_CM_DEPT_AUTHOR
 (
-	MENU_ID varchar(50) NOT NULL,				-- 메뉴아이디
+	DEPT_CD varchar(20) NOT NULL,			    -- 부서코드
 	AUTHOR_GRP_CD varchar(20) NOT NULL,			-- 권한그룹코드
 	USE_YN CHAR(1),								-- 사용여부
 	REGIST_ID varchar(50),						-- 등록아이디
@@ -191,11 +192,11 @@ CREATE TABLE T_CM_DEPT_AUTHOR
 	MODIFY_ID varchar(50),						-- 수정아이디
 	MODIFY_DT timestamp,						-- 수정일시
 	
-	CONSTRAINT PK_T_CM_DEPT_AUTHOR PRIMARY KEY (MENU_ID,AUTHOR_GRP_CD)
+	CONSTRAINT PK_T_CM_DEPT_AUTHOR PRIMARY KEY (DEPT_CD,AUTHOR_GRP_CD)
 ) WITHOUT OIDS;
 
 COMMENT ON TABLE T_CM_DEPT_AUTHOR IS '부서권한';
-COMMENT ON COLUMN T_CM_DEPT_AUTHOR.MENU_ID 		 IS '메뉴아이디';
+COMMENT ON COLUMN T_CM_DEPT_AUTHOR.DEPT_CD 		 IS '부서코드';
 COMMENT ON COLUMN T_CM_DEPT_AUTHOR.AUTHOR_GRP_CD 		 IS '권한그룹코드';
 COMMENT ON COLUMN T_CM_DEPT_AUTHOR.USE_YN IS '사용여부';
 COMMENT ON COLUMN T_CM_DEPT_AUTHOR.REGIST_ID IS '등록아이디';
@@ -318,8 +319,8 @@ COMMENT ON COLUMN T_AM_ASST.MODIFY_DT IS '수정일시';
 -- 자산분류
 CREATE TABLE T_AM_ASST_CL
 (
-	ASST_CL_SN 			serial NOT NULL,					-- 자산분류일련번호	
-	UPPER_ASST_CL_SN 	numeric,					-- 상위자산분류일련번호
+	ASST_CL_SN 			serial NOT NULL,		-- 자산분류일련번호	
+	UPPER_ASST_CL_SN 	int,					-- 상위자산분류일련번호
 	ASST_CL_NM 			VARCHAR(200)  NOT NULL,			-- 자산분류명
 	SORT_ORDR 			numeric,							-- 정렬순서	
 	ASST_CL_DC 			VARCHAR(2000),					-- 자산분류설명
@@ -348,8 +349,8 @@ COMMENT ON COLUMN T_AM_ASST_CL.MODIFY_DT IS '수정일시';
 -- 자산분류내역
 CREATE TABLE T_AM_ASST_CL_LIST
 (
-	ASST_SN numeric NOT NULL,					-- 자산일련번호
-	ASST_CL_SN numeric NOT NULL,					-- 자산분류일련번호
+	ASST_SN int NOT NULL,					-- 자산일련번호
+	ASST_CL_SN int NOT NULL,					-- 자산분류일련번호
 	USE_YN CHAR(1),								-- 사용여부
 	REGIST_ID varchar(50),						-- 등록아이디
 	REGIST_DT timestamp,						-- 등록일시
@@ -402,8 +403,8 @@ COMMENT ON COLUMN T_AM_ASST_ATRB.MODIFY_DT IS '수정일시';
 -- 자산속성내역
 CREATE TABLE T_AM_ASST_ATRB_LIST
 (
-	ASST_SN numeric NOT NULL,					-- 자산일련번호
-	ASST_ATRB_SN numeric NOT NULL,				-- 자산분류일련번호
+	ASST_SN int NOT NULL,					-- 자산일련번호
+	ASST_ATRB_SN int NOT NULL,				-- 자산분류일련번호
 	USE_YN CHAR(1),								-- 사용여부
 	REGIST_ID varchar(50),						-- 등록아이디
 	REGIST_DT timestamp,						-- 등록일시
@@ -460,8 +461,8 @@ CREATE TABLE T_OP_CSTRN
 	CSTRN_SN  serial NOT NULL,					-- 공사일련번호
 	CSTRN_NM  VARCHAR(200)  NOT NULL,			-- 공사명
 	CSTRN_CT  numeric,							-- 공사비용
-	CSTRN_DC  VARCHAR(2000),						-- 공사설명
-	CRPR_SN     numeric NOT NULL,				-- 업체일련번호
+	CSTRN_DC  VARCHAR(2000),					-- 공사설명
+	CRPR_SN     int NOT NULL,					-- 업체일련번호
 	BEGIN_YMD  CHAR(8),							-- 시작일
 	END_YMD  CHAR(8),							-- 종료일
 	USE_YN CHAR(1),								-- 사용여부
@@ -490,8 +491,8 @@ COMMENT ON COLUMN T_OP_CSTRN.MODIFY_DT IS '수정일시';
 -- 공사자산내역
 CREATE TABLE T_OP_CSTRN_ASST_LIST
 (
-	CSTRN_SN numeric NOT NULL,					-- 공사일련번호
-	ASST_SN numeric NOT NULL,					-- 자산일련번호
+	CSTRN_SN int NOT NULL,					-- 공사일련번호
+	ASST_SN int NOT NULL,					-- 자산일련번호
 	USE_YN CHAR(1),								-- 사용여부
 	REGIST_ID varchar(50),						-- 등록아이디
 	REGIST_DT timestamp,						-- 등록일시
@@ -546,8 +547,8 @@ COMMENT ON COLUMN T_OP_CVPL.MODIFY_DT IS '수정일시';
 -- 민원자산내역
 CREATE TABLE T_OP_CVPL_ASST_LIST
 (
-	CVPL_SN numeric NOT NULL,					-- 공사일련번호
-	ASST_SN numeric NOT NULL,					-- 자산일련번호
+	CVPL_SN int NOT NULL,					-- 공사일련번호
+	ASST_SN int NOT NULL,					-- 자산일련번호
 	USE_YN CHAR(1),								-- 사용여부
 	REGIST_ID varchar(50),						-- 등록아이디
 	REGIST_DT timestamp,						-- 등록일시
@@ -599,7 +600,7 @@ COMMENT ON COLUMN T_SV_SRVY.MODIFY_DT IS '수정일시';
 CREATE TABLE T_SV_SRVY_QSIT
 (
 	QSIT_SN   serial NOT NULL,					-- 문항일련번호
-	SRVY_SN   numeric NOT NULL,					-- 설문일련번호
+	SRVY_SN   int NOT NULL,					-- 설문일련번호
 	SRVY_CN    VARCHAR(1000)  NOT NULL,			-- 설문내용
 	SORT_ORDR numeric,							-- 정렬순서
 	USE_YN CHAR(1),								-- 사용여부
@@ -626,8 +627,8 @@ COMMENT ON COLUMN T_SV_SRVY_QSIT.MODIFY_DT IS '수정일시';
 -- 설문보기
 CREATE TABLE T_SV_SRVY_EXPE
 (
-	QSIT_SN numeric NOT NULL,					-- 문항일련번호
-	EXPE_SN numeric NOT NULL,					-- 보기일련번호
+	QSIT_SN int NOT NULL,					-- 문항일련번호
+	EXPE_SN int NOT NULL,					-- 보기일련번호
 	EXPE_CN  VARCHAR(1000)  NOT NULL,			-- 보기내용
 	SORT_ORDR numeric,							-- 정렬순서
 	USE_YN CHAR(1),								-- 사용여부
@@ -654,9 +655,9 @@ COMMENT ON COLUMN T_SV_SRVY_EXPE.MODIFY_DT IS '수정일시';
 -- 설문답변
 CREATE TABLE T_SV_SRVY_ANSWER
 (
-	SRVY_SN numeric NOT NULL,					-- 설문일련번호
-	QSIT_SN numeric NOT NULL,					-- 문항일련번호
-	EXPE_SN numeric NOT NULL,					-- 보기일련번호
+	SRVY_SN int NOT NULL,					-- 설문일련번호
+	QSIT_SN int NOT NULL,					-- 문항일련번호
+	EXPE_SN int NOT NULL,					-- 보기일련번호
 	ANSWER_CN  VARCHAR(1000)  NOT NULL,			-- 답변내용
 	CONECT_IP VARCHAR(100)  NOT NULL,			-- 접속IP
 	USE_YN CHAR(1),								-- 사용여부
@@ -741,8 +742,8 @@ COMMENT ON COLUMN T_EV_P_DIRCT_ITM.MODIFY_DT IS '수정일시';
 CREATE TABLE T_EV_P_MESURE_LIST
 (
 	MESURE_SN 		serial NOT NULL,					-- 측정일련번호
-	EVL_SN 			numeric NOT NULL,					-- 평가일련번호
-	ASST_SN 		numeric NOT NULL,					-- 자산일련번호
+	EVL_SN 			int NOT NULL,					-- 평가일련번호
+	ASST_SN 		int NOT NULL,					-- 자산일련번호
 	DIRCT_EVL_ITM_CD VARCHAR(20) NOT NULL,		-- 직접평가항목코드
 	MESURE_CN  		VARCHAR(1000),					-- 즉정내용
 	MESURE_VAL 		numeric,							-- 측정값
@@ -804,8 +805,8 @@ COMMENT ON COLUMN T_EV_P_DIRCT_STDR.MODIFY_DT IS '수정일시';
 -- 직접평가결과
 CREATE TABLE T_EV_P_DIRCT_RST
 (
-	EVL_SN 			numeric NOT NULL,					-- 평가일련번호
-	ASST_SN 		numeric NOT NULL,					-- 자산일련번호
+	EVL_SN 			int NOT NULL,					-- 평가일련번호
+	ASST_SN 		int NOT NULL,					-- 자산일련번호
 	MTRPIP_CD 		VARCHAR(20) NOT NULL,				-- 관종코드
 	PIP_DMTR  		numeric,							-- 관경
 	LYNG_YYNU  		numeric,							-- 매설년수
@@ -850,7 +851,7 @@ CREATE TABLE T_EV_P_INDR
 	EVL_NM 			 VARCHAR(200)  NOT NULL,				-- 평가명
 	EVL_SE  		 VARCHAR(50),						-- 평가구분
 	EVL_DC  		 VARCHAR(2000),						-- 평가설명
-	CRPR_SN  		 numeric,							-- 업체일련번호
+	CRPR_SN  		 int,							-- 업체일련번호
 	SECT_PRTT_STDR_CN  VARCHAR(1000),			-- 구간분할기준내용
 	USE_YN CHAR(1),								-- 사용여부
 	REGIST_ID varchar(50),						-- 등록아이디
@@ -1077,8 +1078,8 @@ COMMENT ON COLUMN T_EV_P_SECT.MODIFY_DT IS '수정일시';
 -- 점수평가개별중간내역
 CREATE TABLE T_EV_P_SCOR_INDV
 (
-	EVL_SN 			numeric NOT NULL,					-- 평가일련번호
-	ASST_SN 		numeric  NOT NULL,					-- 자산일련번호
+	EVL_SN 			int NOT NULL,					-- 평가일련번호
+	ASST_SN 		int  NOT NULL,					-- 자산일련번호
 	EVL_ITM_CD 		VARCHAR(20),						-- 평가항목코드
 	MTRPIP_AFLT_CD 	VARCHAR(20),					-- 관종계열코드
 	ASST_ATRB_CN 	VARCHAR(1000),					-- 자산속성내용
@@ -1091,7 +1092,7 @@ CREATE TABLE T_EV_P_SCOR_INDV
 	MODIFY_ID varchar(50),						-- 수정아이디
 	MODIFY_DT timestamp,						-- 수정일시
 	
-	CONSTRAINT PK_T_EV_P_SCOR_INDV PRIMARY KEY (EVL_SN)
+	CONSTRAINT PK_T_EV_P_SCOR_INDV PRIMARY KEY (EVL_SN,ASST_SN)
 ) WITHOUT OIDS;
 
 COMMENT ON TABLE T_EV_P_SCOR_INDV IS '점수평가개별중간내역';
@@ -1113,8 +1114,8 @@ COMMENT ON COLUMN T_EV_P_SCOR_INDV.MODIFY_DT IS '수정일시';
 -- 점수평가구간중간내역
 CREATE TABLE T_EV_P_SCOR_SECT
 (
-	EVL_SN 			numeric NOT NULL,					-- 평가일련번호
-	SECT_SN 		numeric  NOT NULL,					-- 구간일련번호
+	EVL_SN 			int NOT NULL,					-- 평가일련번호
+	SECT_SN 		int  NOT NULL,					-- 구간일련번호
 	EVL_ITM_CD 		VARCHAR(20),						-- 평가항목코드
 	MTRPIP_AFLT_CD  VARCHAR(20),					-- 관종계열코드
 	ASST_ATRB_CN 	VARCHAR(1000),					-- 자산속성내용
@@ -1148,9 +1149,9 @@ COMMENT ON COLUMN T_EV_P_SCOR_SECT.MODIFY_DT IS '수정일시';
 -- 점수평가개별결과
 CREATE TABLE T_EV_P_SCOR_INDV_RST
 (
-	EVL_SN numeric NOT NULL,					-- 평가일련번호
-	ASST_SN numeric  NOT NULL,					-- 자산일련번호
-	SECT_SN 	numeric  NOT NULL,					-- 구간일련번호
+	EVL_SN int NOT NULL,					-- 평가일련번호
+	ASST_SN int  NOT NULL,					-- 자산일련번호
+	SECT_SN 	int  NOT NULL,					-- 구간일련번호
 	SCOR_SUM 	numeric,							-- 점수합계
 	WGHT_SUM 	numeric,							-- 가중치합계
 	REVISN_COEF numeric,						-- 보정계수
@@ -1185,8 +1186,8 @@ COMMENT ON COLUMN T_EV_P_SCOR_INDV_RST.MODIFY_DT IS '수정일시';
 -- 점수평가구간결과
 CREATE TABLE T_EV_P_SCOR_SECT_RST
 (
-	EVL_SN numeric NOT NULL,					-- 평가일련번호
-	SECT_SN numeric  NOT NULL,					-- 구간일련번호
+	EVL_SN int NOT NULL,					-- 평가일련번호
+	SECT_SN int  NOT NULL,					-- 구간일련번호
 	SCOR_SUM numeric,							-- 점수합계
 	WGHT_SUM numeric,							-- 가중치합계
 	REVISN_COEF numeric,						-- 보정계수
